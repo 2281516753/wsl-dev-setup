@@ -1,0 +1,31 @@
+# Himalaya 邮件客户端配置模板
+# 用法：填入邮箱和授权码，放到 ~/.config/himalaya/config.toml
+
+[accounts.personal]
+email = "your_email@qq.com"
+display-name = "Your Name"
+default = true
+
+# IMAP 收件
+backend.type = "imap"
+backend.host = "imap.qq.com"
+backend.port = 993
+backend.encryption.type = "tls"
+backend.login = "your_email@qq.com"
+backend.auth.type = "password"
+backend.auth.raw = "your_16char_auth_code"
+
+# SMTP 发件
+message.send.backend.type = "smtp"
+message.send.backend.host = "smtp.qq.com"
+message.send.backend.port = 587
+message.send.backend.encryption.type = "start-tls"
+message.send.backend.login = "your_email@qq.com"
+message.send.backend.auth.type = "password"
+message.send.backend.auth.raw = "your_16char_auth_code"
+
+[accounts.personal.folder.aliases]
+inbox = "INBOX"
+sent = "Sent Messages"
+drafts = "Drafts"
+trash = "Deleted Messages"

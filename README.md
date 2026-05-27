@@ -65,6 +65,55 @@ chmod +x *.sh
 
 在推送代码前，利用 WSL2 本地运行 GitHub Actions 或 GitLab CI 的近似环境。Docker + systemd 用户服务确保容器守护进程开机自启，`gh` CLI 直接管理 GitHub 仓库，无需来回切换 Windows 和 Linux 工具链。
 
+## 配置模板
+
+除了自动化脚本，本仓库还提供以下配置模板，可直接使用：
+
+```
+configs/
+├── bashrc-additions.sh     # Shell 快捷 alias（代理开关、Git、Hermes）
+├── mihomo-whitelist.yaml   # mihomo 白名单代理配置（推荐）
+└── himalaya-config.toml    # QQ 邮箱命令行客户端配置
+
+systemd/
+├── email-tunnel@.service   # 邮件隧道模板服务（实例化）
+└── gateway-proxy.conf      # Gateway 代理环境变量
+```
+
+### Shell Alias
+
+```bash
+# 追加到 ~/.bashrc
+source configs/bashrc-additions.sh
+```
+
+常用快捷命令：`pon`/`poff` 开关代理、`gw` 管理 systemd 服务、`gws` 查看状态。
+
+### mihomo 白名单配置
+
+```bash
+# 替换节点信息后覆盖
+cp configs/mihomo-whitelist.yaml ~/.config/mihomo/config.yaml
+systemctl --user restart mihomo
+```
+
+默认白名单模式——只对 Google/GitHub/OpenAI 等被墙域名走代理，其余全直连。
+
+### 邮件客户端
+
+```bash
+# 填入 QQ 邮箱和授权码后
+mkdir -p ~/.config/himalaya
+cp configs/himalaya-config.toml ~/.config/himalaya/config.toml
+# 配置隧道（参考 hermes-tools）
+systemctl --user enable --now email-tunnel@11993 email-tunnel@11587
+```
+
+### 参考
+
+- 完整安装教程：[hermes-setup-guide](https://github.com/2281516753/hermes-setup-guide)
+- 常见问题：[hermes-pitfalls](https://github.com/2281516753/hermes-pitfalls)
+
 ## 作者
 
 Wang Jiong — Network Engineering, cloud computing aspirant.

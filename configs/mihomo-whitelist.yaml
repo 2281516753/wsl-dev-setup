@@ -1,0 +1,44 @@
+# mihomo 白名单模式配置模板
+# 用法：替换 proxy 节点信息，放到 ~/.config/mihomo/config.yaml
+
+port: 7890
+socks-port: 7891
+allow-lan: false
+mode: Rule
+log-level: info
+
+dns:
+  enable: true
+  enhanced-mode: redir-host
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+
+proxies:
+  - name: "你的节点"
+    type: ss
+    server: your-server.com
+    port: 443
+    cipher: aes-256-gcm
+    password: your-password
+
+proxy-groups:
+  - name: 🔰 代理
+    type: select
+    proxies:
+      - 你的节点
+      - DIRECT
+
+rules:
+  # 被墙网站
+  - DOMAIN-SUFFIX,google.com,🔰 代理
+  - DOMAIN-SUFFIX,youtube.com,🔰 代理
+  - DOMAIN-SUFFIX,github.com,🔰 代理
+  - DOMAIN-SUFFIX,openai.com,🔰 代理
+  - DOMAIN-SUFFIX,anthropic.com,🔰 代理
+  - DOMAIN-SUFFIX,telegram.org,🔰 代理
+  - DOMAIN-SUFFIX,twitter.com,🔰 代理
+  - DOMAIN-SUFFIX,reddit.com,🔰 代理
+  - DOMAIN-SUFFIX,wikipedia.org,🔰 代理
+  # 其余直连
+  - MATCH,DIRECT
