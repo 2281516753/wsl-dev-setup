@@ -1,6 +1,10 @@
 # WSL Dev Environment Setup
 
+[![Shell](https://img.shields.io/badge/Shell-✓-4EAA25?logo=gnu-bash)](https://www.gnu.org/software/bash/)
+[![WSL2](https://img.shields.io/badge/WSL2-✓-0078D6?logo=windows)](https://learn.microsoft.com/en-us/windows/wsl/)
+[![Docker](https://img.shields.io/badge/Docker-✓-2496ED?logo=docker)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)]()
 
 一键部署 WSL2 开发环境的脚本集合，包含代理配置、常用工具安装、systemd 服务管理。
 
@@ -35,88 +39,31 @@ chmod +x *.sh
 - **编辑器**: neovim, vscode (code)
 - **版本管理**: git, gh (GitHub CLI)
 - **语言**: Python 3, Node.js, Go
-- **容器**: Docker (WSL2 backend)
-- **网络**: nmap, iperf3, tcpdump, mtr, dig, curl, wget
-- **代理**: mihomo (Clash Meta), 自动配置环境变量
-
-## 代理配置说明
-
-`setup-proxy.sh` 假定 Windows 宿主机上已有 Clash 客户端运行在 `7890` 端口。脚本会自动：
-1. 下载并安装 mihomo
-2. 配置 `HTTP_PROXY` / `HTTPS_PROXY` 环境变量
-3. 设置 `.bashrc` / `.zshrc` 自动加载代理
-4. 配置 systemd 自启服务
+- **容器**: Docker, Docker Compose
+- **代理**: mihomo (Clash Meta) 透明代理
+- **网络**: nmap, iperf3, tcpdump, mtr
 
 ## 使用场景
 
-### 场景一：新电脑到手，一键部署完整开发环境
+### 场景一：新电脑到手，30 分钟搭好开发环境
 
-刚拿到新电脑，装好 WSL2 后，只需克隆本仓库运行 `./install.sh`，即可在 10 分钟内拥有完整的 Linux 开发环境——zsh 终端、Neovim 编辑器、Python/Node/Go 语言链、Docker 容器运行时，全部自动配置到位。
+换新电脑或重装系统后，最头疼的就是重新配置开发环境。clone 本仓库后执行 `./install.sh`，脚本自动安装所有常用工具、配置代理、设置 systemd 服务，全程无需手动干预。装完就能开始写代码。
 
-### 场景二：Windows 桌面开发 + WSL 后端服务
+### 场景二：多人团队统一开发环境
 
-在 Windows 上用 VS Code / WebStorm 等 IDE 编写代码，利用 WSL2 运行后端服务、数据库和容器。`setup-proxy.sh` 自动打通 Windows 宿主机代理，让 WSL 内的 `apt`、`pip`、`npm`、`docker pull` 全部走代理加速，无缝访问 GitHub 等外部资源。
+团队新成员入职时，每个人手动装工具不仅耗时还容易版本不一致。将本仓库分发给新成员，一键执行即可获得与团队一致的开发环境，避免"我这能跑你那不行"的问题。
 
-### 场景三：网络工程实验环境快速搭建
+### 场景三：WSL 网络故障快速恢复
 
-网络工程专业学生或从业者，需要频繁使用网络诊断工具。`network-tools.sh` 一键安装 nmap、iperf3、tcpdump、mtr、wireshark-cli 等工具，配合 WSL2 的网络特性快速搭建抓包、扫描、性能测试的实验环境。
+WSL2 的网络配置偶尔会因 Windows 更新或休眠而失效（DNS 丢失、代理断开）。`setup-proxy.sh` 和 `network-tools.sh` 可以快速诊断和修复网络问题，不用每次出问题都去查 StackOverflow。
 
-### 场景四：CI/CD 本地验证与容器化开发
+### 场景四：学习 Linux 运维的实战素材
 
-在推送代码前，利用 WSL2 本地运行 GitHub Actions 或 GitLab CI 的近似环境。Docker + systemd 用户服务确保容器守护进程开机自启，`gh` CLI 直接管理 GitHub 仓库，无需来回切换 Windows 和 Linux 工具链。
+脚本中包含了 systemd 服务管理、Shell 编程、网络配置、包管理等 Linux 运维核心知识点。阅读和修改这些脚本本身就是很好的学习过程。
 
-## 配置模板
+## Author
 
-除了自动化脚本，本仓库还提供以下配置模板，可直接使用：
-
-```
-configs/
-├── bashrc-additions.sh     # Shell 快捷 alias（代理开关、Git、Hermes）
-├── mihomo-whitelist.yaml   # mihomo 白名单代理配置（推荐）
-└── himalaya-config.toml    # QQ 邮箱命令行客户端配置
-
-systemd/
-├── email-tunnel@.service   # 邮件隧道模板服务（实例化）
-└── gateway-proxy.conf      # Gateway 代理环境变量
-```
-
-### Shell Alias
-
-```bash
-# 追加到 ~/.bashrc
-source configs/bashrc-additions.sh
-```
-
-常用快捷命令：`pon`/`poff` 开关代理、`gw` 管理 systemd 服务、`gws` 查看状态。
-
-### mihomo 白名单配置
-
-```bash
-# 替换节点信息后覆盖
-cp configs/mihomo-whitelist.yaml ~/.config/mihomo/config.yaml
-systemctl --user restart mihomo
-```
-
-默认白名单模式——只对 Google/GitHub/OpenAI 等被墙域名走代理，其余全直连。
-
-### 邮件客户端
-
-```bash
-# 填入 QQ 邮箱和授权码后
-mkdir -p ~/.config/himalaya
-cp configs/himalaya-config.toml ~/.config/himalaya/config.toml
-# 配置隧道（参考 hermes-tools）
-systemctl --user enable --now email-tunnel@11993 email-tunnel@11587
-```
-
-### 参考
-
-- 完整安装教程：[hermes-setup-guide](https://github.com/2281516753/hermes-setup-guide)
-- 常见问题：[hermes-pitfalls](https://github.com/2281516753/hermes-pitfalls)
-
-## 作者
-
-Wang Jiong — Network Engineering, cloud computing aspirant.
+Wang Jiong — Network Engineering student, cloud computing enthusiast.
 
 ## License
 
