@@ -12,7 +12,7 @@
 ## 适用环境
 
 - **WSL2** (Windows Subsystem for Linux 2)
-- **Ubuntu 24.04+ / Debian 12+**
+- **Ubuntu 26.04+ / Debian 12+**
 - 其他基于 systemd 的 Linux 发行版
 
 ## 快速开始
@@ -43,7 +43,7 @@ chmod +x *.sh
 | 版本管理 | git, gh (GitHub CLI) |
 | 语言 | Python 3, Node.js, Go |
 | 容器 | Docker, Docker Compose |
-| 代理 | mihomo (Clash Meta) 透明代理 |
+| 代理 | mihomo (Clash Meta) |
 | 网络 | nmap, iperf3, tcpdump, mtr |
 
 ## 使用场景
@@ -51,11 +51,21 @@ chmod +x *.sh
 - **新电脑上手**：30 分钟从零到全配开发环境
 - **团队入职**：一键统一全团队开发环境
 - **WSL 急救**：Windows 更新后代理/DNS 挂了？快速修复
-- **学习素材**：Shell 编程 + systemd + Linux 运维实战
+
+## 相关项目
+
+| 项目 | 说明 |
+|------|------|
+| [cloud-lab](https://github.com/2281516753/cloud-lab) | 云基础设施实验平台 |
+| [net-auto](https://github.com/2281516753/net-auto) | 网络自动化工具集 |
+| [hermes-pitfalls](https://github.com/2281516753/hermes-pitfalls) | Claude Code 踩坑指南 |
+| [hermes-setup-guide](https://github.com/2281516753/hermes-setup-guide) | Claude Code WSL2 安装指南 |
 
 ## 作者
 
-王炯 (Wang Jiong) — 网络工程专业。
+**王炯 (Wang Jiong)** — 网络工程专业。
+
+[![GitHub](https://img.shields.io/badge/GitHub-2281516753-181717?logo=github)](https://github.com/2281516753)
 
 ## License
 
